@@ -14,6 +14,8 @@ PERIODICITY_CHOICES = [
 ]
 
 class Habits(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -25,16 +27,12 @@ class Habits(models.Model):
         max_length=255,
         verbose_name='Place'
     )
-    time = models.TimeField(
-        verbose_name='Time'
-    )
+    time = models.TimeField(null=True, blank=True)
     action = models.CharField(
         max_length=255,
         verbose_name='Action'
     )
-    is_pleasant = models.BooleanField(
-        verbose_name='Is pleasant'
-    )
+    is_pleasant = models.BooleanField(default=True)
     related_habit = models.ForeignKey(
         'self',
         on_delete=models.SET_NULL,
@@ -53,9 +51,7 @@ class Habits(models.Model):
         verbose_name='Reward',
         **NULLABLE
     )
-    lead_time = models.DurationField(
-        verbose_name='Lead time'
-    )
+    lead_time = models.CharField(max_length=255, null=False, default="10 minutes")
     is_public = models.BooleanField(
         default=False,
         verbose_name='Is public'

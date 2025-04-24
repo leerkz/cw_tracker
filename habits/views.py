@@ -1,4 +1,5 @@
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 
 from habits.models import Habits
 from habits.paginators import HabitPaginator
@@ -6,38 +7,22 @@ from habits.permissions import IsOwner
 from habits.serializers import HabitSerializer
 
 
-class HabitsList(ListAPIView):
+class HabitViewSet(ModelViewSet):
+    queryset = Habits.objects.all()
     serializer_class = HabitSerializer
     pagination_class = HabitPaginator
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Habits.objects.filter(is_public=True)
-
-
-class HabitsDetail(RetrieveAPIView):
-    serializer_class = HabitSerializer
-    queryset = Habits.objects.all()
-    permission_classes = [IsOwner]
-
-
-class HabitsCreate(CreateAPIView):
-    serializer_class = HabitSerializer
-    queryset = Habits.objects.all()
+        # Только публичные или только свои, в зависимости от действия
+        if self.action in ['list']:
+            return Habits.objects.filter(is_public=True)
+        return Habits.objects.all()
 
     def perform_create(self, serializer):
-        new_habit = serializer.save()
-        new_habit.user = self.request.user
-        new_habit.save()
+        serializer.save(user=self.request.user)
 
-
-class HabitsUpdate(UpdateAPIView):
-    serializer_class = HabitSerializer
-    queryset = Habits.objects.all()
-    permission_classes = [IsOwner]
-
-
-class HabitsDestroy(DestroyAPIView):
-    serializer_class = HabitSerializer
-    queryset = Habits.objects.all()
-    permission_classes = [IsOwner]
-
+    def get_permissions(self):
+        if self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+            return [IsOwner()]
+        return super().get_permissions()
