@@ -32,6 +32,7 @@ httpcore==1.0.8
 httpx==0.28.1
 idna==3.10
 inflection==0.5.1
+iniconfig==2.1.0
 installer==0.7.0
 jaraco.classes==3.4.0
 jaraco.context==6.0.1
@@ -44,6 +45,7 @@ packaging==25.0
 pbs-installer==2025.4.9
 pkginfo==1.12.1.2
 platformdirs==4.3.7
+pluggy==1.5.0
 poetry==2.1.2
 poetry-core==2.1.2
 prompt_toolkit==3.0.51
@@ -51,6 +53,8 @@ psycopg2-binary==2.9.10
 pycparser==2.22
 PyJWT==2.9.0
 pyproject_hooks==1.2.0
+pytest==8.3.5
+pytest-asyncio==0.23.8
 python-crontab==3.2.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.0

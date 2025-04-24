@@ -8,9 +8,10 @@ from habits.serializers import HabitSerializer
 
 class HabitsList(ListAPIView):
     serializer_class = HabitSerializer
-    queryset = Habits.objects.all()
-    permission_classes = [IsOwner]
     pagination_class = HabitPaginator
+
+    def get_queryset(self):
+        return Habits.objects.filter(is_public=True)
 
 
 class HabitsDetail(RetrieveAPIView):
@@ -40,7 +41,3 @@ class HabitsDestroy(DestroyAPIView):
     queryset = Habits.objects.all()
     permission_classes = [IsOwner]
 
-
-class PublicHabitsList(ListAPIView):
-    serializer_class = HabitSerializer
-    queryset = Habits.objects.filter(is_public=True)
