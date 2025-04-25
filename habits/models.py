@@ -8,9 +8,9 @@ NULLABLE = {
 }
 
 PERIODICITY_CHOICES = [
-    ('1_day', 'Every 1 day'),
-    ('3_days', 'Every 3 days'),
-    ('7_days', 'Every 7 days'),
+    (1, 'Every 1 day'),
+    (3, 'Every 3 days'),
+    (7, 'Every 7 days'),
 ]
 
 class Habits(models.Model):
@@ -40,10 +40,9 @@ class Habits(models.Model):
         verbose_name='Related habit',
         **NULLABLE
     )
-    periodicity = models.CharField(
-        max_length=30,
+    periodicity = models.PositiveSmallIntegerField(
         choices=PERIODICITY_CHOICES,
-        default='1_day',
+        default=1,
         verbose_name='Periodicity'
     )
     reward = models.CharField(

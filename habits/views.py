@@ -1,5 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from habits.models import Habits
 from habits.paginators import HabitPaginator
@@ -25,3 +27,14 @@ class HabitViewSet(ModelViewSet):
         if self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
             return [IsOwner()]
         return super().get_permissions()
+
+    @action(detail=False, methods=["get"], url_path="my_habits")
+    def my_habits(self, request):
+        user_habits = Habits.objects.filter(user=request.user)
+        page = self.paginate_queryset(user_habits)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(user_habits, many=True)
+        return Response(serializer.data)
