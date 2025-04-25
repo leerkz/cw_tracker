@@ -15,14 +15,20 @@ class UserAPITests(TestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_create_user(self):
-        url = reverse('user-list')
-        data = {'username': 'newuser', 'email': 'new@example.com', 'password': 'newpass123'}
+        url = reverse('users:user-list')
+        data = {
+            'username': 'newuser',
+            'password': 'newpass123',
+            'password_confirm': 'newpass123',
+            'chat_id': '123456789'
+        }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['username'], 'newuser')
 
     def test_get_user(self):
-        url = reverse('user-detail', kwargs={'pk': self.user.pk})
+        url = reverse('users:user-detail', kwargs={'pk': self.user.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], self.user.username)
+

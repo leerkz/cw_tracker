@@ -14,7 +14,6 @@ class HabitViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # Только публичные или только свои, в зависимости от действия
         if self.action in ['list']:
             return Habits.objects.filter(is_public=True)
         return Habits.objects.all()
